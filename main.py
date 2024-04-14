@@ -1,7 +1,7 @@
 import json
 import asyncio
 
-from aiogram.filters import CommandStart
+from aiogram.filters import CommandStart, Command
 from aiogram import types, Dispatcher, Bot
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
 import config
@@ -12,45 +12,26 @@ dp = Dispatcher()
 
 
 # функция старта
-
-#@dp.message_handler(commands=['start'])
-@dp.message(CommandStart())
+@dp.message(Command("start"))
 async def welcome(message: types.Message):
-    sti = open('stikers\\hi_stiker.tgs', 'rb')
-    await bot.send_sticker(message.chat.id, sti)
 
-    markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    kb = [[KeyboardButton(text= 'Заправки')]]
 
-    item_1 = KeyboardButton('Заправки')
-    #item_2 = KeyboardButton('Случайное число')
+    keyboard = types.ReplyKeyboardMarkup(keyboard=kb, resize_keyboard= True)
 
-    markup.add(item_1)
-
-    await bot.send_message(message.chat.id, 'Привет', reply_markup=markup)
+    await message.answer('Привет', reply_markup=keyboard)
 
 
 
 
 # Разгаворная часть
-#@dp.message_handler(content_types=['text'])
 @dp.message()
 async def lalala(message: types.Message):
-    #if message.text == 'Случайное число':
-        #await bot.send_message(message.chat.id, str(random.randint(0, 100)))
 
     if message.text == 'Заправки':
 
-        # markup = InlineKeyboardMarkup()
-        # item_1 = InlineKeyboardButton("WOG", callback_data='WOG')
-        # item_2 = InlineKeyboardButton("Okko", callback_data='OKKO')
-        # item_3 = InlineKeyboardButton("Shell", callback_data='SHELL')
-        # item_4 = InlineKeyboardButton("Другие", callback_data='other')
-
         btns = [[InlineKeyboardButton(text= "WOG", callback_data='WOG'), InlineKeyboardButton(text= "Okko", callback_data='OKKO')],
                 [InlineKeyboardButton(text= "Shell", callback_data='SHELL'), InlineKeyboardButton(text= "Другие", callback_data='other')]]
-
-        # markup.row(item_1, item_2)
-        # markup.row(item_3, item_4)
 
         markup = InlineKeyboardMarkup(inline_keyboard= btns)
         await bot.send_message(message.chat.id, 'Список добавленых заправок', reply_markup=markup)
